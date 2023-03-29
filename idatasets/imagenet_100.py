@@ -7,7 +7,7 @@ import pdb
 Class_100_List = list(range(100))
 
 
-file_ = open('Datasets/imagenet100_s1993.txt', 'r')
+file_ = open('datasets/imagenet100_s1993.txt', 'r')
 Class_100_List_1993 = [f.strip() for f in file_.readlines()]
 
 class ImageNet100(ImageFolder):
