@@ -129,7 +129,7 @@ def train(train_loader, epoch, task, model, total_epoch):
         correct += predicted.eq(targets).sum().item()
         acc = 100.*correct/total
     
-    targets_all = torch.cat(targets_all)
+    # # targets_all = torch.cat(targets_all)
     # print(torch.max(targets_all), torch.min(targets_all), targets_all.shape[0])
     print("[Train: ], [%d/%d: ], [Accuracy: %.2f], [Loss: %f], [Lr: %f]" 
           %(epoch, total_epoch, acc, train_loss/batch_idx, optimizer.param_groups[0]['lr']))
