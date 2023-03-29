@@ -1,0 +1,3 @@
+Args:
+Namespace(data_path='Datasets/CIFAR100', num_class=100, num_task=6, first_task_cls=50, dataset='cifar100', train_batch=64, test_batch=128, workers=8, random_classes=False, validation=0.0, overflow=False, model='resnet32', lr=0.01, lr_sub=0.01, lr_schedule='100-200', lr_schedule_sub='100-200', total_epoch=250, total_epoch_sub=250, wd=0.005, wd_sub=0.005, optim='sgd', gpu='0', init_with_pre=True, start_from=0, num_bases=12, num_member=2, add_description='', class_per_task=16, model_path='checkpoints\\cifar100_6tasks_firstcls50_member2_resnet32_bases12_wd0.005_sgd')
+
