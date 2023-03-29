@@ -16,7 +16,7 @@ import torchvision
 import torchvision.transforms as transforms
 import argparse
 from torch.optim.lr_scheduler import MultiStepLR
-import datasets
+#import datasets
 torch.set_printoptions(precision=5,sci_mode=False)
 
 from utils import logmeanexp
