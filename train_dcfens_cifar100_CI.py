@@ -16,6 +16,7 @@ import torchvision
 import torchvision.transforms as transforms
 import argparse
 from torch.optim.lr_scheduler import MultiStepLR
+import datasets
 torch.set_printoptions(precision=5,sci_mode=False)
 
 from utils import logmeanexp
@@ -361,7 +362,7 @@ def inferecne(test_loader, task, total_task, model):
 
 
 
-
+from datasets.seq_cifar100 import SequentialCIFAR100 as dataset
 ## Dataloaders
 inc_dataset = data.IncrementalDataset(
                                 dataset_name=args.dataset,
@@ -378,12 +379,19 @@ inc_dataset = data.IncrementalDataset(
                             )
 task_data=[]
 for i in range(args.num_task):
-    task_info, train_loader, val_loader, test_loader = inc_dataset.new_task()
-
+    #task_info, train_loader, val_loader, test_loader = inc_dataset.new_task()
+    #_________________________________________________________________________________________________________
+    train_loader, test_loader = dataset.get_data_loaders()
     task_data.append([train_loader, test_loader])
 # pdb.set_trace()
+#@123#####################################################################
+increments = []
+increments = [inc_dataset.first_task_cls]
+increments += [(args.num_class-inc_dataset.first_task_cls)//(inc_dataset.num_tasks-1)] * (inc_dataset.num_tasks-1)
+class_increments = increments
+#@123#####################################################################
 
-class_increments = inc_dataset.increments
+#class_increments = inc_dataset.increments
 
 ## initialize network
 net = Net(num_classes=args.class_per_task, num_bases=args.num_bases, num_member=args.num_member)

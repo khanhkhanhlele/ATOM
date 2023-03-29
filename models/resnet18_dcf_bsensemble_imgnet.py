@@ -77,6 +77,7 @@ class ResNet(nn.Module):
         self.num_member = num_member
 
         self.avgpool = nn.AvgPool2d(7, stride=1)
+        
         self.out_size = 512 * block.expansion
 
         self.branch_list = nn.ModuleList()
@@ -169,7 +170,8 @@ class ResNet(nn.Module):
         for l, module in enumerate(branch_):
             x = module(x)
 
-        x = self.avgpool(x)
+        #x = self.avgpool(x)
+        x= F.avg_pool2d(x, x.shape[2])
         x = x.view(x.size(0), -1)
         out = head_(x)
 

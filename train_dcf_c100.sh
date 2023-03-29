@@ -4,7 +4,7 @@ python train_dcfens_cifar100_CI.py \
 --data_path Datasets/CIFAR100 \
 --num_task $1 \
 --first_task_cls 50 \
---model resnet32 \
+--model resnet18 \
 --num_member 2 \
 --num_bases 12 \
 --init_with_pre \
