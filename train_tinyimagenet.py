@@ -362,11 +362,11 @@ def inferecne(test_loader, task, total_task, model):
 
 
 
-from datasets.seq_tinyimagenet import Sequentialtinseq_tinyimagenet
+from datasets.seq_tinyimagenet import SequentialTinyImagenet
 ## Dataloaders
 
 task_data=[]
-dataset = Sequentialtinseq_tinyimagenet(args)
+dataset = SequentialTinyImagenet(args)
 for i in range(dataset.N_TASKS):
     #task_info, train_loader, val_loader, test_loader = inc_dataset.new_task()
     #_________________________________________________________________________________________________________
