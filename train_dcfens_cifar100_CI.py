@@ -362,7 +362,7 @@ def inferecne(test_loader, task, total_task, model):
 
 
 
-from datasets.seq_cifar100 import SequentialCIFAR100 as dataset
+from datasets.seq_cifar100 import SequentialCIFAR100
 ## Dataloaders
 inc_dataset = data.IncrementalDataset(
                                 dataset_name=args.dataset,
@@ -378,6 +378,7 @@ inc_dataset = data.IncrementalDataset(
                                 num_tasks=args.num_task
                             )
 task_data=[]
+dataset = SequentialCIFAR100()
 for i in range(args.num_task):
     #task_info, train_loader, val_loader, test_loader = inc_dataset.new_task()
     #_________________________________________________________________________________________________________
