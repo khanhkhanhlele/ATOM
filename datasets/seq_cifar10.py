@@ -16,6 +16,7 @@ from datasets.transforms.denormalization import DeNormalize
 from datasets.utils.continual_dataset import (ContinualDataset,
                                               store_masked_loaders)
 from datasets.utils.validation import get_train_val
+base_path = "/datasets/data"
 
 class TCIFAR10(CIFAR10):
     """Workaround to avoid printing the already downloaded messages."""
@@ -79,13 +80,13 @@ class SequentialCIFAR10(ContinualDataset):
         test_transform = transforms.Compose(
             [transforms.ToTensor(), self.get_normalization_transform()])
 
-        train_dataset = MyCIFAR10(base_path() + 'CIFAR10', train=True,
+        train_dataset = MyCIFAR10(base_path + 'CIFAR10', train=True,
                                   download=True, transform=transform)
         if self.args.validation:
             train_dataset, test_dataset = get_train_val(train_dataset,
                                                     test_transform, self.NAME)
         else:
-            test_dataset = TCIFAR10(base_path() + 'CIFAR10',train=False,
+            test_dataset = TCIFAR10(base_path + 'CIFAR10',train=False,
                                    download=True, transform=test_transform)
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
@@ -97,10 +98,10 @@ class SequentialCIFAR10(ContinualDataset):
             [transforms.ToPILImage(), SequentialCIFAR10.TRANSFORM])
         return transform
 
-    @staticmethod
-    def get_backbone():
-        return resnet18(SequentialCIFAR10.N_CLASSES_PER_TASK
-                        * SequentialCIFAR10.N_TASKS)
+    # @staticmethod
+    # def get_backbone():
+    #     return resnet18(SequentialCIFAR10.N_CLASSES_PER_TASK
+    #                     * SequentialCIFAR10.N_TASKS)
 
     @staticmethod
     def get_loss():
