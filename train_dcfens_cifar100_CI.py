@@ -412,7 +412,7 @@ ci_acc_list=[]
 ## Loss
 criterion = nn.CrossEntropyLoss()
 
-for task in range(args.start_from, args.num_task):
+for task in range(, dataset.N_TASKS):
 
     ### My version of training/ testing a task
     best_acc = 0
