@@ -106,7 +106,10 @@ def train(train_loader, epoch, task, model, total_epoch):
     # targets_all = []
 
     previous_cls = sum(class_increments[:task])
-    for batch_idx, (inputs, targets) in enumerate(train_loader):
+    # for batch_idx, (inputs, targets) in enumerate(train_loader):
+    for batch_idx, data in enumerate(train_loader):
+        inputs, targets = data
+        #---------
         inputs, targets = inputs.cuda(), targets.cuda()
         targets=targets-previous_cls # assume sequential split for random  split mapping should me changed
         optimizer.zero_grad()
