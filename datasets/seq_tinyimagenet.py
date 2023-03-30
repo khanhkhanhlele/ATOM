@@ -10,7 +10,7 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as transforms
-from backbone.ResNet18 import resnet18
+#from backbone.ResNet18 import resnet18
 from PIL import Image
 from torch.utils.data import Dataset
 
@@ -18,8 +18,8 @@ from datasets.transforms.denormalization import DeNormalize
 from datasets.utils.continual_dataset import (ContinualDataset,
                                               store_masked_loaders)
 from datasets.utils.validation import get_train_val
-from utils.conf import base_path_dataset as base_path
-
+#from utils.conf import base_path_dataset as base_path
+base_path = "/datasets/data"
 
 class TinyImagenet(Dataset):
     """
@@ -111,7 +111,7 @@ class MyTinyImagenet(TinyImagenet):
         if hasattr(self, 'logits'):
             return img, target, not_aug_img, self.logits[index]
 
-        return img, target, not_aug_img
+        return img, target
 
 
 class SequentialTinyImagenet(ContinualDataset):
@@ -133,22 +133,22 @@ class SequentialTinyImagenet(ContinualDataset):
         test_transform = transforms.Compose(
             [transforms.ToTensor(), self.get_normalization_transform()])
 
-        train_dataset = MyTinyImagenet(base_path() + 'TINYIMG',
+        train_dataset = MyTinyImagenet(base_path + 'TINYIMG',
                                        train=True, download=True, transform=transform)
         if self.args.validation:
             train_dataset, test_dataset = get_train_val(train_dataset,
                                                         test_transform, self.NAME)
         else:
-            test_dataset = TinyImagenet(base_path() + 'TINYIMG',
+            test_dataset = TinyImagenet(base_path + 'TINYIMG',
                                         train=False, download=True, transform=test_transform)
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
         return train, test
 
-    @staticmethod
-    def get_backbone():
-        return resnet18(SequentialTinyImagenet.N_CLASSES_PER_TASK
-                        * SequentialTinyImagenet.N_TASKS)
+    # @staticmethod
+    # def get_backbone():
+    #     return resnet18(SequentialTinyImagenet.N_CLASSES_PER_TASK
+    #                     * SequentialTinyImagenet.N_TASKS)
 
     @staticmethod
     def get_loss():
