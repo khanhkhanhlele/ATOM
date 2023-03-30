@@ -423,6 +423,8 @@ for task in range(args.start_from, args.num_task):
     ## add a new network branch
     net.add_branch(class_increments[task], task)
     net.cuda()
+    for name, param in net.named_parameters():
+        print(name, param.shape)
 
     #  init model with previous task's params
     if task > 0 and args.init_with_pre:
