@@ -379,7 +379,7 @@ inc_dataset = data.IncrementalDataset(
                             )
 task_data=[]
 dataset = SequentialCIFAR100(args)
-for i in range(args.num_task):
+for i in range(dataset.N_TASKS):
     #task_info, train_loader, val_loader, test_loader = inc_dataset.new_task()
     #_________________________________________________________________________________________________________
     train_loader, test_loader = dataset.get_data_loaders()
