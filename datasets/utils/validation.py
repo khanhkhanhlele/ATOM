@@ -12,7 +12,7 @@ import torch.nn as nn
 from PIL import Image
 from torch.utils.data import Dataset
 
-from utils import create_if_not_exists
+#from utils import create_if_not_exists
 
 
 class ValidationDataset(Dataset):
@@ -61,7 +61,7 @@ def get_train_val(train: Dataset, test_transform: nn.Module,
     """
     dataset_length = train.data.shape[0]
     directory = 'datasets/val_permutations/'
-    create_if_not_exists(directory)
+    #create_if_not_exists(directory)
     file_name = dataset + '.pt'
     if os.path.exists(directory + file_name):
         perm = torch.load(directory + file_name)
