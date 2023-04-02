@@ -13,6 +13,7 @@ import torch.optim as optim
 import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
 import torchvision
+import csv
 import torchvision.transforms as transforms
 import argparse
 from torch.optim.lr_scheduler import MultiStepLR
@@ -412,6 +413,11 @@ ci_acc_list=[]
 ## Loss
 criterion = nn.CrossEntropyLoss()
 
+# Initialize the CSV file and write the header row
+with open('cifar100.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Task', 'Accuracy', 'NumParams', 'MemSize'])
+
 for task in range(args.start_from, dataset.N_TASKS):
 
     ### My version of training/ testing a task
@@ -482,15 +488,10 @@ for task in range(args.start_from, dataset.N_TASKS):
 
     # Save the task accuracy, number of parameters, and memory size
     mem_size = torch.cuda.max_memory_allocated() / 1024 / 1024  # in MB
-
-    with open(f"task_{num_task_}_accuracy.txt", "w") as f:
-        f.write(str(task_acc_))
-
-    with open(f"task_{task}_num_params.txt", "w") as f:
-        f.write(str(total_params))
-
-    with open(f"task_{task}_mem_size.txt", "w") as f:
-        f.write(str(mem_size))
+    
+    with open('cifar100.csv', mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([num_task_, task_acc_, total_params, mem_size])
 
     # Clear the memory
     torch.cuda.empty_cache()
