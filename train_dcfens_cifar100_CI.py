@@ -480,6 +480,20 @@ for task in range(args.start_from, dataset.N_TASKS):
     ci_acc_list.append(task_acc_)
     print('Total tasks: {}, CIL Acc: {:.2f}, Task-id Cls. Acc.:  {:.2f}'.format(num_task_, task_acc_, task_pred_acc_))
 
+    # Save the task accuracy, number of parameters, and memory size
+    mem_size = torch.cuda.max_memory_allocated() / 1024 / 1024  # in MB
+
+    with open(f"task_{num_task_}_accuracy.txt", "w") as f:
+        f.write(str(task_acc_))
+
+    with open(f"task_{task}_num_params.txt", "w") as f:
+        f.write(str(total_params))
+
+    with open(f"task_{task}_mem_size.txt", "w") as f:
+        f.write(str(mem_size))
+
+    # Clear the memory
+    torch.cuda.empty_cache()
 
 
 print(ci_acc_list)
