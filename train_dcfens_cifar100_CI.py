@@ -491,7 +491,7 @@ for task in range(args.start_from, dataset.N_TASKS):
     
     with open('cifar100.csv', mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([num_task_, task_acc_, total_params,task_pred_acc_, mem_size])
+        writer.writerow([num_task_, task_acc_, task_pred_acc_,total_params, mem_size])
 
     # Clear the memory
     torch.cuda.empty_cache()
