@@ -392,7 +392,7 @@ increments = [dataset.N_CLASSES_PER_TASK]
 increments += [(dataset.N_TASKS*dataset.N_CLASSES_PER_TASK-dataset.N_CLASSES_PER_TASK)//(dataset.N_TASKS-1)] * (dataset.N_TASKS-1)
 class_increments = increments
 #@123#####################################################################
-
+print(increments)
 #class_increments = inc_dataset.increments
 
 ## initialize network
