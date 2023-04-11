@@ -15,10 +15,10 @@ class First_Conv(nn.Module):
         super().__init__()
 
         self.conv_module = nn.Sequential(
-                                nn.Conv2d(inplanes, planes, kernel_size=7, stride=2, padding=3),
+                                nn.Conv2d(inplanes, planes, kernel_size=3, stride=1, padding=1),
                                 nn.BatchNorm2d(planes),
                                 nn.ReLU(inplace=True),
-                                nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+                                #nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
                             )
 
     def forward(self, x):
