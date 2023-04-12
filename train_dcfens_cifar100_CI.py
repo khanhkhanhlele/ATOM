@@ -94,6 +94,7 @@ print()
 
 def train(train_loader, epoch, task, model, total_epoch):
     ## model: currently trained model, task_model: past models
+    print(model)
     print('\nTask: %d, Epoch: %d' % (task, epoch))
     model.branch_list[task].train()
     model.heads[task].train()
