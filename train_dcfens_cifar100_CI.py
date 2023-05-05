@@ -47,8 +47,8 @@ parser.add_argument('--lr_schedule', default='80-120', help='learning rate drop 
 parser.add_argument('--lr_schedule_sub', default='80-120', help='learning rate drop schedule, used after the 1st task')
 parser.add_argument('--total_epoch', default=160, type=int)
 parser.add_argument('--total_epoch_sub', default=160, type=int, help='used after the 1st task')
-parser.add_argument('--wd', default=5e-3, help='weight decay', type=float)
-parser.add_argument('--wd_sub', default=5e-3, help='weight decay, used after the 1st task', type=float)
+parser.add_argument('--wd', default=0, help='weight decay', type=float)#5e-3
+parser.add_argument('--wd_sub', default=0, help='weight decay, used after the 1st task', type=float)#5e-3
 
 parser.add_argument('--optim', default='sgd', choices=['sgd', 'adam', 'nestrov'], help='Optimizer')
 parser.add_argument('--gpu', default='0')
@@ -186,9 +186,9 @@ def get_optimizer(model, task_id):
 
     if args.optim == 'sgd':
         if task_id == 0:
-            optimizer = optim.SGD(parameters, lr=args.lr, momentum=0.9, weight_decay=args.wd)
+            optimizer = optim.SGD(parameters, lr=args.lr, momentum=0, weight_decay=args.wd)#momentum=0.9
         else:
-            optimizer = optim.SGD(parameters, lr=args.lr_sub, momentum=0.9, weight_decay=args.wd_sub)
+            optimizer = optim.SGD(parameters, lr=args.lr_sub, momentum=0, weight_decay=args.wd_sub)#momentum=0.9
     elif args.optim == 'adam':
         optimizer = torch.optim.Adam(parameters, weight_decay=args.wd, lr=args.lr)
     elif args.optim == 'nestrov':
