@@ -11,10 +11,10 @@ python train_dcfens_cifar10_CI.py \
 --test_batch 128 \
 --lr 0.01 \
 --wd 0 \
---total_epoch 10 \
+--total_epoch 1 \
 --lr_schedule 75-90 \
 --lr_sub 0.01 \
 --wd_sub 0 \
---total_epoch_sub 10 \
+--total_epoch_sub 1 \
 --lr_schedule_sub 75-90 \
 --gpu 0 \
