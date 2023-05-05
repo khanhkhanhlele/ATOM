@@ -174,9 +174,9 @@ def get_optimizer(model, task_id):
         parameters = parameters + list(model.coeff_list)
         train_keys = train_keys + [f'coeff_list.{i}' for i in range(len(model.coeff_list))]
 
-    print('***Optimized Parameters:')
+    #print('***Optimized Parameters:')
     # pdb.set_trace()
-    print(', '.join(train_keys))
+    #print(', '.join(train_keys))
 
     if task_id > 0:
         branch_param_count = np.sum([param.numel() for param in parameters]) / 1e6
