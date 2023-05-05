@@ -94,7 +94,6 @@ print()
 
 def train(train_loader, epoch, task, model, total_epoch):
     ## model: currently trained model, task_model: past models
-    print(model)
     print('\nTask: %d, Epoch: %d' % (task, epoch))
     model.branch_list[task].train()
     model.heads[task].train()
@@ -387,14 +386,11 @@ for i in range(dataset.N_TASKS):
     train_loader, test_loader = dataset.get_data_loaders()
     task_data.append([train_loader, test_loader])
 # pdb.set_trace()
-#@123#####################################################################
 increments = []
 increments = [dataset.N_CLASSES_PER_TASK]
 increments += [(dataset.N_TASKS*dataset.N_CLASSES_PER_TASK-dataset.N_CLASSES_PER_TASK)//(dataset.N_TASKS-1)] * (dataset.N_TASKS-1)
 class_increments = increments
-#@123#####################################################################
-print(increments)
-#class_increments = inc_dataset.increments
+
 
 ## initialize network
 net = Net(num_classes=args.class_per_task, num_bases=args.num_bases, num_member=args.num_member)
