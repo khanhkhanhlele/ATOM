@@ -50,7 +50,7 @@ class TinyImagenet(Dataset):
             self.data.append(np.load(os.path.join(
                 root, 'processed/x_%s_%02d.npy' %
                       ('train' if self.train else 'val', num + 1))))
-        self.data = np.concatenate(np.array(self.data))
+        self.data = np.concatenate(np.array(self.data))[:1000]
 
         self.targets = []
         for num in range(20):
