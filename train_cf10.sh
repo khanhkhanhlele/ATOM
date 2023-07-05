@@ -3,7 +3,6 @@ python train_dcfens_cifar10_CI.py \
 --data_path Datasets/CIFAR10 \
 --num_task 5 \
 --num_class 10
---first_task_cls 0 \
 --model resnet18 \
 --num_member 2 \
 --num_bases 48 \

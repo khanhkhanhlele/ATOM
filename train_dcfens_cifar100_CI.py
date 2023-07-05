@@ -30,7 +30,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--data_path', default="./Datasets/ImageNet/")
 parser.add_argument('--num_class', default=100, type=int)
 parser.add_argument('--num_task', default=6, type=int)
-parser.add_argument('--first_task_cls', default=10, type=int)
+parser.add_argument('--first_task_cls', default=20, type=int)
 parser.add_argument('--dataset', default='imagenet100')
 
 parser.add_argument('--train_batch', default=128, type=int)
