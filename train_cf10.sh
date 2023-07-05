@@ -1,9 +1,10 @@
 python train_dcfens_cifar10_CI.py \
 --dataset cifar10 \
 --data_path Datasets/CIFAR10 \
---num_task 5 \
+--num_task 6 \
 --num_class 10
 --model resnet18 \
+--first_task_cls  50\
 --num_member 2 \
 --num_bases 48 \
 --init_with_pre \
