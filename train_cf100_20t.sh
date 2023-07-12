@@ -17,3 +17,4 @@ python train_dcfens_cifar100_CI.py \
 --total_epoch_sub 100 \
 --lr_schedule_sub 75-90 \
 --gpu 0 \
+--first_task_cls 5\
