@@ -1,7 +1,7 @@
 python train_dcfens_cifar100_CI.py \
 --dataset cifar100 \
 --data_path Datasets/CIFAR100 \
---num_task 21 \
+--num_task 20 \
 --model resnet18 \
 --num_member 2 \
 --num_bases 48 \

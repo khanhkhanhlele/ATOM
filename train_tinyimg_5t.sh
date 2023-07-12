@@ -1,7 +1,7 @@
 python train_tinyimagenet.py \
 --dataset tinyimagenet \
 --data_path Datasets/tinyimagenet \
---num_task 6 \
+--num_task 5 \
 --first_task_cls 0 \
 --model resnet18 \
 --num_member 2 \

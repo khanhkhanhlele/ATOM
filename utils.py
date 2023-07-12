@@ -9,7 +9,7 @@ from datetime import datetime
 from models.Conv_DCFE import *
 
 def save_model(args,task,acc,model):
-    print('Saving..')
+    #print('Saving..')
     statem = {
         'net': model.state_dict(),
         'acc': acc,
