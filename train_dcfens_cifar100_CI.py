@@ -13,11 +13,9 @@ import torch.optim as optim
 import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
 import torchvision
-import csv
 import torchvision.transforms as transforms
 import argparse
 from torch.optim.lr_scheduler import MultiStepLR
-#import datasets
 torch.set_printoptions(precision=5,sci_mode=False)
 
 from utils import logmeanexp
@@ -29,8 +27,8 @@ from models.Conv_DCFE import *
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_path', default="./Datasets/ImageNet/")
 parser.add_argument('--num_class', default=100, type=int)
-parser.add_argument('--num_task', default=6, type=int)
-parser.add_argument('--first_task_cls', default=20, type=int)
+parser.add_argument('--num_task', default=6, type=int, choices=[6, 11])
+parser.add_argument('--first_task_cls', default=10, type=int)
 parser.add_argument('--dataset', default='imagenet100')
 
 parser.add_argument('--train_batch', default=128, type=int)
@@ -45,10 +43,10 @@ parser.add_argument('--lr', type=float, default=0.01)
 parser.add_argument('--lr_sub', type=float, default=0.01, help='used after the 1st task')
 parser.add_argument('--lr_schedule', default='80-120', help='learning rate drop schedule')
 parser.add_argument('--lr_schedule_sub', default='80-120', help='learning rate drop schedule, used after the 1st task')
-parser.add_argument('--total_epoch', default=160, type=int)
-parser.add_argument('--total_epoch_sub', default=160, type=int, help='used after the 1st task')
-parser.add_argument('--wd', default=0, help='weight decay', type=float)#5e-3
-parser.add_argument('--wd_sub', default=0, help='weight decay, used after the 1st task', type=float)#5e-3
+parser.add_argument('--total_epoch', default=1, type=int)
+parser.add_argument('--total_epoch_sub', default=1, type=int, help='used after the 1st task')
+parser.add_argument('--wd', default=5e-3, help='weight decay', type=float)
+parser.add_argument('--wd_sub', default=5e-3, help='weight decay, used after the 1st task', type=float)
 
 parser.add_argument('--optim', default='sgd', choices=['sgd', 'adam', 'nestrov'], help='Optimizer')
 parser.add_argument('--gpu', default='0')
@@ -131,7 +129,7 @@ def train(train_loader, epoch, task, model, total_epoch):
         correct += predicted.eq(targets).sum().item()
         acc = 100.*correct/total
     
-    # # targets_all = torch.cat(targets_all)
+    targets_all = torch.cat(targets_all)
     # print(torch.max(targets_all), torch.min(targets_all), targets_all.shape[0])
     print("[Train: ], [%d/%d: ], [Accuracy: %.2f], [Loss: %f], [Lr: %f]" 
           %(epoch, total_epoch, acc, train_loss/batch_idx, optimizer.param_groups[0]['lr']))
@@ -174,9 +172,9 @@ def get_optimizer(model, task_id):
         parameters = parameters + list(model.coeff_list)
         train_keys = train_keys + [f'coeff_list.{i}' for i in range(len(model.coeff_list))]
 
-    #print('***Optimized Parameters:')
+    print('***Optimized Parameters:')
     # pdb.set_trace()
-    #print(', '.join(train_keys))
+    print(', '.join(train_keys))
 
     if task_id > 0:
         branch_param_count = np.sum([param.numel() for param in parameters]) / 1e6
@@ -185,9 +183,9 @@ def get_optimizer(model, task_id):
 
     if args.optim == 'sgd':
         if task_id == 0:
-            optimizer = optim.SGD(parameters, lr=args.lr, momentum=0, weight_decay=args.wd)#momentum=0.9
+            optimizer = optim.SGD(parameters, lr=args.lr, momentum=0.9, weight_decay=args.wd)
         else:
-            optimizer = optim.SGD(parameters, lr=args.lr_sub, momentum=0, weight_decay=args.wd_sub)#momentum=0.9
+            optimizer = optim.SGD(parameters, lr=args.lr_sub, momentum=0.9, weight_decay=args.wd_sub)
     elif args.optim == 'adam':
         optimizer = torch.optim.Adam(parameters, weight_decay=args.wd, lr=args.lr)
     elif args.optim == 'nestrov':
@@ -363,7 +361,7 @@ def inferecne(test_loader, task, total_task, model):
 
 
 
-from datasets.seq_cifar100 import SequentialCIFAR100
+
 ## Dataloaders
 inc_dataset = data.IncrementalDataset(
                                 dataset_name=args.dataset,
@@ -379,18 +377,13 @@ inc_dataset = data.IncrementalDataset(
                                 num_tasks=args.num_task
                             )
 task_data=[]
-dataset = SequentialCIFAR100(args)
-for i in range(dataset.N_TASKS):
-    #task_info, train_loader, val_loader, test_loader = inc_dataset.new_task()
-    #_________________________________________________________________________________________________________
-    train_loader, test_loader = dataset.get_data_loaders()
+for i in range(args.num_task):
+    task_info, train_loader, val_loader, test_loader = inc_dataset.new_task()
+
     task_data.append([train_loader, test_loader])
 # pdb.set_trace()
-increments = []
-increments = [dataset.N_CLASSES_PER_TASK]
-increments += [(dataset.N_TASKS*dataset.N_CLASSES_PER_TASK-dataset.N_CLASSES_PER_TASK)//(dataset.N_TASKS-1)] * (dataset.N_TASKS-1)
-class_increments = increments
 
+class_increments = inc_dataset.increments
 
 ## initialize network
 net = Net(num_classes=args.class_per_task, num_bases=args.num_bases, num_member=args.num_member)
@@ -410,12 +403,7 @@ ci_acc_list=[]
 ## Loss
 criterion = nn.CrossEntropyLoss()
 
-# Initialize the CSV file and write the header row
-with open('cifar100.csv', mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Task', 'CIL Acc','TI Acc', 'Task-id Acc', 'NumParams', 'MemSize'])
-
-for task in range(args.start_from, dataset.N_TASKS):
+for task in range(args.start_from, args.num_task):
 
     ### My version of training/ testing a task
     best_acc = 0
@@ -426,9 +414,6 @@ for task in range(args.start_from, dataset.N_TASKS):
     ## add a new network branch
     net.add_branch(class_increments[task], task)
     net.cuda()
-    ####################
-    total_params = sum(p.numel() for p in net.parameters())
-    print(f"Total number of parameters: {total_params}")
 
     #  init model with previous task's params
     if task > 0 and args.init_with_pre:
@@ -483,15 +468,6 @@ for task in range(args.start_from, dataset.N_TASKS):
     ci_acc_list.append(task_acc_)
     print('Total tasks: {}, CIL Acc: {:.2f}, Task-id Cls. Acc.:  {:.2f}'.format(num_task_, task_acc_, task_pred_acc_))
 
-    # Save the task accuracy, number of parameters, and memory size
-    mem_size = torch.cuda.max_memory_allocated() / 1024 / 1024  # in MB
-    
-    with open('cifar100.csv', mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([num_task_, task_acc_, task_pred_acc_,total_params, mem_size])
-
-    # Clear the memory
-    torch.cuda.empty_cache()
 
 
 print(ci_acc_list)
