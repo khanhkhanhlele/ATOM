@@ -415,7 +415,7 @@ with open('cifar100.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(['Task', 'CIL Acc','TI Acc', 'Task-id Acc', 'NumParams', 'MemSize'])
 
-for task in range(args.start_from, dataset.N_TASKS):
+for task in range(args.start_from, args.num_task):
 
     ### My version of training/ testing a task
     best_acc = 0
