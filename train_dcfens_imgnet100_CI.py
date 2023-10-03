@@ -23,6 +23,7 @@ import incremental_dataloader as data
 from utils import *
 from models.Conv_DCFE import *
 
+import csv
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_path', default="./Datasets/ImageNet/")
@@ -236,7 +237,11 @@ def check_task(task, inputs, model, total_task='all'):
     
     return ctask, correct, joint_entropy
 
-
+# Initialize the CSV file and write the header row
+with open('img100.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Task', 'CIL Acc', 'Task-id Acc', 'NumParams', 'MemSize'])
+    
 def test(test_loader, task, model):
     global best_acc
     model.eval()

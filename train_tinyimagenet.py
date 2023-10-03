@@ -24,6 +24,7 @@ import incremental_dataloader as data
 from utils import *
 from models.Conv_DCFE import *
 
+import csv
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_path', default="./Datasets/ImageNet/")
@@ -400,6 +401,12 @@ ci_acc_list=[]
 ## Loss
 criterion = nn.CrossEntropyLoss()
 
+
+# Initialize the CSV file and write the header row
+with open('tinyimg.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Task', 'CIL Acc', 'Task-id Acc', 'NumParams', 'MemSize'])
+ 
 for task in range(args.start_from, dataset.N_TASKS):
 
     ### My version of training/ testing a task
@@ -468,6 +475,12 @@ for task in range(args.start_from, dataset.N_TASKS):
     ci_acc_list.append(task_acc_)
     print('Total tasks: {}, CIL Acc: {:.2f}, Task-id Cls. Acc.:  {:.2f}'.format(num_task_, task_acc_, task_pred_acc_))
 
+    # Save the task accuracy, number of parameters, and memory size
+    mem_size = torch.cuda.max_memory_allocated() / 1024 / 1024  # in MB
+    
+    with open('tinyimg.csv', mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([num_task_, task_acc_, task_pred_acc_,total_params, mem_size])
 
 
 print(ci_acc_list)
