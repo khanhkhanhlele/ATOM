@@ -4,7 +4,7 @@ python train_dcfens_cifar10_CI.py \
 --num_task 5 \
 --num_class 10 \
 --model resnet18 \
---first_task_cls  50\
+--first_task_cls 50 \
 --num_member 2 \
 --num_bases 48 \
 --init_with_pre \
